@@ -18,6 +18,10 @@
                    class="block font-medium {{ $route == 'admin.users.index' ? 'text-blue-600 font-bold' : 'text-gray-700 hover:text-blue-600' }}">
                     👤 Manage Users
                 </a>
+                 <a href="{{ route('books.index') }}"
+                   class="block font-medium {{ $route == 'admin.users.index' ? 'text-blue-600 font-bold' : 'text-gray-700 hover:text-blue-600' }}">
+                    📚 View Books
+                </a>
                 <form method="POST" action="{{ route('logout') }}" class="pt-6">
                     @csrf
                     <button type="submit" class="flex items-center gap-2 text-red-600 hover:text-red-800 font-medium">

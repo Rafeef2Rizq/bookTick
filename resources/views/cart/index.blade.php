@@ -54,7 +54,7 @@
                             @endforeach
                             <tr class="bg-gray-100 font-bold">
                                 <td colspan="3" class="px-4 py-2 text-right">Total:</td>
-                                <td colspan="2" class="px-4 py-2">${{ $total }}</td>
+                                <td colspan="2" class="px-4 py-2">${{ $grandTotal }}</td>
                             </tr>
                         </tbody>
                     </table>

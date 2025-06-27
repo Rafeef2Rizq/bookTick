@@ -13,7 +13,6 @@
         $cartCount += $item['quantity'];
     }
 ?>
-
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
            <div class="flex justify-end mb-4">
     <a href="{{ route('cart.index') }}" class="relative">
@@ -38,7 +37,7 @@
                         alt="{{ $book->title }}"
                         class="w-full h-56 object-cover">
                     <div class="p-4">
-                        <h3 class="text-lg font-bold text-gray-800 mb-1">{{ $book->title }}</h3>
+                        <h3 class="text-lg font-bold text-gray-800 mb-1"><a href="{{route('books.show', $book->id)}}">{{ $book->title }}</a></h3>
                         <p class="text-sm text-gray-600 mb-1">Author: {{ $book->author }}</p>
                         <p class="text-green-600 font-semibold mb-3">Price: ${{ $book->price }}</p>
                         <a href="{{ route('cart.add', $book->id) }}" class="inline-block bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">

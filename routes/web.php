@@ -29,8 +29,8 @@ Route::get('/cart/add/{id}',[CartController::class,'add'])->name('cart.add');
 Route::get('/cart/remove/{id}',[CartController::class,'remove'])->name('cart.remove');
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::get('/checkout', [CheckoutController::class, 'index'])->middleware('auth')->name('checkout.index');
+Route::post('/checkout', [CheckoutController::class, 'store'])->middleware('auth')->name('checkout.store');
 
 
 Route::get('/checkout/thankyou', function() {

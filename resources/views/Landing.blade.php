@@ -22,7 +22,7 @@
   @php
   use App\Models\Book;
 
-    $books=Book::all();
+    $books=Book::paginate(6);
   @endphp
   <!-- Nav -->
   <nav class="bg-white shadow sticky top-0 z-50">

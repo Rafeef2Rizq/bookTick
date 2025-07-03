@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Models\Rating;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -46,4 +47,19 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function ratings(){
+    return $this->hasMany(Rating::class);
+}
+
+public function hasRated($book)
+{
+    return $this->ratings()->where('book_id', $book->id)->exists();
+}
+
+public function getRating($book)
+{
+    return $this->ratings()->where('book_id', $book->id)->value('rating');
+}
+
+
 }

@@ -60,3 +60,5 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
     Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
 });
+
+Route::post('/books/{book}/rate', [BookController::class, 'rate'])->name('books.rate');

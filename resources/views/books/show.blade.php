@@ -41,14 +41,65 @@
                     🛒 Add to Cart
                 </a>
 
-               
+
                 <br>
                 <!-- Back Link -->
                 <a href="{{ route('books.index') }}"
                     class="inline-block text-blue-600 hover:underline text-sm mt-4">
                     ← Back to Book List
                 </a>
+                <!-- Rating -->
+                @if(auth()->check())
+                <form id="ratingForm" class="my-4">
+                    @csrf
+                    <label for="rating" class="block font-semibold text-gray-700 mb-2">Rate this Book:</label>
+                    <select name="rating" id="rating" class="border rounded px-3 py-2">
+                        @for ($i = 1; $i <= 5; $i++)
+                            <option value="{{ $i }}" {{ auth()->user()->hasRated($book) && auth()->user()->getRating($book) == $i ? 'selected' : '' }}>
+                            {{ $i }} ⭐
+                            </option>
+                            @endfor
+                    </select>
+                    <input type="hidden" name="book_id" value="{{ $book->id }}">
+                </form>
+                @endif
+
+
+                <!-- إشعار بسيط -->
+                <div id="ratingMessage" class="text-green-600 text-sm mt-2 hidden">Rating updated successfully!</div>
+
+                <!-- JavaScript: إرسال التقييم بدون زر -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const ratingSelect = document.getElementById('rating');
+                        const form = document.getElementById('ratingForm');
+                        const message = document.getElementById('ratingMessage');
+
+                        ratingSelect.addEventListener('change', function() {
+                            const formData = new FormData(form);
+
+                            fetch("{{ route('books.rate', $book) }}", {
+                                    method: "POST",
+                                    headers: {
+                                        'X-CSRF-TOKEN': formData.get('_token'),
+                                    },
+                                    body: formData,
+                                })
+                                .then(response => {
+                                    if (response.ok) {
+                                        message.classList.remove('hidden');
+                                        setTimeout(() => message.classList.add('hidden'), 3000);
+                                    } else {
+                                        alert('Something went wrong');
+                                    }
+                                });
+                        });
+                    });
+                </script>
+
             </div>
+
+
         </div>
     </div>
 

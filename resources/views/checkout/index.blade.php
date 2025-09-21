@@ -1,154 +1,142 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Checkout') }}
-        </h2>
-    </x-slot>
+<x-main.head />
 
-    <div class="py-12 bg-gray-100 min-h-screen">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm sm:rounded-lg p-6">
-
-                {{-- عرض رسائل الخطأ أو النجاح --}}
-                @if(session('error'))
-                    <div class="mb-4 p-3 bg-red-200 text-red-800 rounded">
-                        {{ session('error') }}
-                    </div>
-                @endif
-                @if(session('success'))
-                    <div class="mb-4 p-3 bg-green-200 text-green-800 rounded">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                {{-- ملخص السلة --}}
-                <h3 class="text-lg font-semibold mb-4">Order Summary</h3>
-                <div class="mb-6">
-                    @if(count($cart) > 0)
-                        <ul class="divide-y divide-gray-200">
-                            @foreach($cart as $item)
-                                <li class="py-2 flex justify-between items-center">
-                                    <div class="flex items-center space-x-4">
-                                        <img src="{{ asset('images/' . $item['image']) }}" alt="{{ $item['title'] }}" class="w-16 h-20 object-cover rounded">
-                                        <div>
-                                            <p class="font-medium">{{ $item['title'] }}</p>
-                                            <p class="text-sm text-gray-600">Quantity: {{ $item['quantity'] }}</p>
-                                        </div>
-                                    </div>
-                                    <p class="font-semibold">${{ number_format($item['price'] * $item['quantity'], 2) }}</p>
-                                </li>
-                            @endforeach
-                        </ul>
-                        <div class="mt-4 text-right text-xl font-bold">
-                            Total: ${{ number_format($total, 2) }}
-                        </div>
-                    @else
-                        <p>Your cart is empty.</p>
-                    @endif
-                </div>
-
-                {{-- نموذج الدفع --}}
-                <h3 class="text-lg font-semibold mb-4">Your Information & Payment</h3>
-                <form action="{{ route('checkout.store') }}" method="POST" id="payment-form" class="space-y-6">
-                    @csrf
-
-                    {{-- بيانات العميل --}}
-                    <div>
-                        <label for="name" class="block font-medium text-gray-700 mb-1">Name</label>
-                        <input type="text" name="name" id="name" value="{{ old('name') }}" required
-                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        @error('name') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div>
-                        <label for="address" class="block font-medium text-gray-700 mb-1">Address</label>
-                        <textarea name="address" id="address" rows="3" required
-                                  class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('address') }}</textarea>
-                        @error('address') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div>
-                        <label for="phone" class="block font-medium text-gray-700 mb-1">Phone</label>
-                        <input type="text" name="phone" id="phone" value="{{ old('phone') }}" required
-                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        @error('phone') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    {{-- بطاقة الدفع --}}
-                    <div>
-                        <label for="card-holder-name" class="block font-medium text-gray-700 mb-1">Card Holder Name</label>
-                        <input id="card-holder-name" type="text" required
-                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3">
-                    </div>
-
-                    <div>
-                        <label for="card-element" class="block font-medium text-gray-700 mb-1">Credit or Debit Card</label>
-                        <div id="card-element" class="w-full border border-gray-300 rounded px-3 py-3"></div>
-                        <div id="card-errors" class="text-red-600 text-sm mt-2"></div>
-                    </div>
-
-                    {{-- بيانات مخفية --}}
-                    <input type="hidden" name="payment_method" id="payment-method">
-
-                    <div>
-                        <button type="submit" id="card-button"
-                                class="w-full bg-blue-600 text-white font-semibold py-3 rounded hover:bg-blue-700 transition"
-                                data-secret="{{ $intent->client_secret }}">
-                            Pay & Place Order
-                        </button>
-                    </div>
-                </form>
-
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div id="loading-center">
+            <div id="loading-center-absolute">
+                <div class="object" id="object_one"></div>
+                <div class="object" id="object_two"></div>
+                <div class="object" id="object_three"></div>
+                <div class="object" id="object_four"></div>
             </div>
         </div>
     </div>
 
-@push('scripts')
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const stripe = Stripe("{{ config('services.stripe.key') }}");
-        const elements = stripe.elements();
-        const cardElement = elements.create('card');
-        cardElement.mount('#card-element');
+    <!-- HEADER AREA -->
+    <x-main.header />
+    <x-main.menu />
+    <x-main.contact />
 
-        const cardHolderName = document.getElementById('card-holder-name');
-        const cardButton = document.getElementById('card-button');
-        const clientSecret = cardButton.dataset.secret;
-        const form = document.getElementById('payment-form');
-        const errorDisplay = document.getElementById('card-errors');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
 
-            cardButton.disabled = true;
-            cardButton.textContent = "Processing...";
+    <!-- ABOUT AREA -->
+    <section id="about">
+        <!-- محتوى about -->
+    </section>
 
-            const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-                payment_method: {
-                    card: cardElement,
-                    billing_details: {
-                        name: cardHolderName.value,
+    <!-- CART / CHECKOUT AREA START -->
+    <section id="checkout" class="container py-5">
+        @if(count($cart) > 0)
+        <div class="row">
+            @php $grandTotal = 0; @endphp
+            @foreach($cart as $id => $item)
+            @php $subtotal = $item['price'] * $item['quantity']; $grandTotal += $subtotal; @endphp
+            <div class="col-lg-12 mb-3">
+                <div class="d-flex justify-content-between align-items-center border p-3 rounded">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ asset('images/' . $item['image']) }}" alt="{{ $item['title'] }}" class="img-fluid" style="width: 80px; height: 100px; object-fit: cover;">
+                        <div class="ms-3">
+                            <h5>{{ $item['title'] }}</h5>
+                            <p>Quantity: {{ $item['quantity'] }}</p>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <p class="mb-1">Price: ${{ $item['price'] }}</p>
+                        <p class="mb-1">Subtotal: ${{ $subtotal }}</p>
+                        <a href="{{ route('cart.remove', $id) }}" class="btn btn-danger btn-sm">Remove</a>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        <div class="text-end mb-4">
+            <h4>Total: ${{ $grandTotal }}</h4>
+            <a href="#payment-form" class="btn btn-primary">Proceed to Payment</a>
+        </div>
+        @else
+        <p>Your cart is empty.</p>
+        @endif
+
+
+        <form action="{{ route('checkout.store') }}" method="POST" id="payment-form" class="border p-4 rounded">
+            @csrf
+            {{-- بيانات العميل --}}
+            <div class="mb-3">
+                <label>Name</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label>Address</label>
+                <textarea name="address" class="form-control" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label>Phone</label>
+                <input type="text" name="phone" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label>Card Holder Name</label>
+                <input type="text" id="card-holder-name" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="card-element">Credit or Debit Card</label>
+                <div id="card-element" class="w-full border border-gray-300 rounded px-3 py-3"></div>
+                <div id="card-errors" class="text-red-600 text-sm mt-2"></div>
+            </div>
+            {{-- بيانات مخفية --}}
+            <input type="hidden" name="payment_method" id="payment-method">
+            <div class="mb-3">
+                <button type="submit" id="card-button" class="btn btn-success w-100" data-secret="{{ $intent->client_secret }}"> Pay & Place Order </button>
+            </div>
+        </form>
+    </section>
+    <!-- CART / CHECKOUT AREA END -->
+
+    <!-- NEW_COMICS, POPULAR, TEAM, REVIEWS, BLOG, FOOTER -->
+    <x-main.footer />
+    <x-main.script />
+
+    @push('scripts')
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const stripe = Stripe("{{ config('services.stripe.key') }}");
+            const elements = stripe.elements();
+            const cardElement = elements.create('card');
+            cardElement.mount('#card-element');
+            const cardHolderName = document.getElementById('card-holder-name');
+            const cardButton = document.getElementById('card-button');
+            const clientSecret = cardButton.dataset.secret;
+            const form = document.getElementById('payment-form');
+            const errorDisplay = document.getElementById('card-errors');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                cardButton.disabled = true;
+                cardButton.textContent = "Processing...";
+                const {
+                    error,
+                    paymentIntent
+                } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: cardHolderName.value,
+                        }
                     }
+                });
+                if (error) {
+                    errorDisplay.textContent = error.message;
+                    cardButton.disabled = false;
+                    cardButton.textContent = "Pay & Place Order";
+                } else if (paymentIntent.status === 'succeeded') {
+                    window.location.href = "{{ route('checkout.thankyou') }}";
+                } else {
+                    errorDisplay.textContent = "Unexpected status: " + paymentIntent.status;
+                    cardButton.disabled = false;
+                    cardButton.textContent = "Pay & Place Order";
                 }
             });
-
-            if (error) {
-                errorDisplay.textContent = error.message;
-                cardButton.disabled = false;
-                cardButton.textContent = "Pay & Place Order";
-            } else if (paymentIntent.status === 'succeeded') {
-                // إذا تم الدفع بنجاح، نعيد توجيه المستخدم يدويًا
-                window.location.href = "{{ route('checkout.thankyou') }}";
-            } else {
-                errorDisplay.textContent = "Unexpected status: " + paymentIntent.status;
-                cardButton.disabled = false;
-                cardButton.textContent = "Pay & Place Order";
-            }
         });
-    });
-</script>
-@endpush
-
-
-</x-app-layout>
+    </script>
+     @endpush
+</body>

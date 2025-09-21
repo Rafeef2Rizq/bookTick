@@ -1,11 +1,45 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Book List') }}
-        </h2>
-    </x-slot>
 
-    <div class="py-12 bg-gray-100">
+<!DOCTYPE html>
+<html lang="en">
+
+
+<x-main.head />
+
+<body>
+
+    <!-- perloader -->
+    <div id="preloader">
+        <div id="loading-center">
+            <div id="loading-center-absolute">
+                <div class="object" id="object_one"></div>
+                <div class="object" id="object_two"></div>
+                <div class="object" id="object_three"></div>
+                <div class="object" id="object_four"></div>
+            </div>
+        </div>
+    </div>
+    <!-- preloader -->
+
+    <!-- HEADER AREA START -->
+    <x-main.header />
+
+    <!-- right-menu modal -->
+    <x-main.menu />
+    <!-- contact modal -->
+    <x-main.contact />
+
+    <!-- HEADER AREA ENDS -->
+    <!-- bookmark -->
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error )
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+
+    @endif
         <?php
     $cart = session('cart', []);
     $cartCount = 0;
@@ -13,42 +47,83 @@
         $cartCount += $item['quantity'];
     }
 ?>
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-           <div class="flex justify-end mb-4">
-    <a href="{{ route('cart.index') }}" class="relative">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-700 hover:text-gray-900 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 7h11L17 13M9 21h.01M15 21h.01" />
-        </svg>
-        @if($cartCount > 0)
-        <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-            {{ $cartCount }}
-        </span>
-        @endif
-    </a>
-</div>
+    <section id="page-title">
+        <div id="backtotop">
+            <a href="#page-title" id="backtotop-value"><i class="fa-solid fa-arrow-up"></i></a>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="section-title">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <span>Bookmark</span>
+                            <h3>Our books</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                @forelse ($books as $book)
-                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                    <img
-                        src="{{ $book->image ? asset('images/' . $book->image) : asset('images/default-book.png') }}"
-                        alt="{{ $book->title }}"
-                        class="w-full h-56 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold text-gray-800 mb-1"><a href="{{route('books.show', $book->id)}}">{{ $book->title }}</a></h3>
+    <section id="bookmark">
+
+        <div class="container">
+
+            <div class="row">
+                @foreach ($books as $book)
+                <div class="col-lg-3 col-md-6 bookmark-item text-center">
+                    <img src="images/{{ $book->image }}" alt="comic-img" class="img-fluid">
+                    <h3>{{ $book->title }}</h3>
+                    
+                      <div class="p-4">
                         <p class="text-sm text-gray-600 mb-1">Author: {{ $book->author }}</p>
                         <p class="text-green-600 font-semibold mb-3">Price: ${{ $book->price }}</p>
-                        <a href="{{ route('cart.add', $book->id) }}" class="inline-block bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">
+                        <a href="{{ route('cart.add', $book->id) }}" class="button-primary">
                             Add to Cart
                         </a>
                     </div>
                 </div>
-                @empty
-                <p class="text-center col-span-4 text-gray-600">No books available at the moment.</p>
-                @endforelse
+                  @endforeach
+            
             </div>
         </div>
-    </div>
-</x-app-layout>
+    </section>
+   
+
+    <!-- bookmark -->
+
+
+
+    <!-- FOOTER AREA START -->
+    <x-main.footer />
+    <!-- FOOTER AREA END -->
+
+    <!-- COPY_RIGHT AREA START -->
+    <section id="copy_right">
+        <div class="container">
+            <div class="row copyright-txt">
+                <div class="col-lg-6">
+                    <span>LANGUAGE: </span>
+                    <a href="#">BAN</a>
+                    <a href="#">NL</a>
+                    <a href="#" class="active">EN</a>
+                    <a href="#">FR</a>
+                    <a href="#">EU</a>
+                </div>
+                <div class="col-lg-6 text-end">
+                    <p>&copy; Made by EpikTheme. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- COPY_RIGHT AREA END -->
+
+    <!-- JavaScript -->
+    <x-main.script />
+</body>
+
+
+<!-- Mirrored from epiktheme.com/demos/html/comixo_live_preview/demos/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 15 Jul 2024 03:52:57 GMT -->
+
+</html>

@@ -14,31 +14,28 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books=Book::all();
-        return view('books.index',compact('books'));
+        $books = Book::all();
+        return view('books.index', compact('books'));
     }
 
- 
+
     /**
      * Display the specified resource.
      */
     public function show(Book $book)
     {
-           return view('books.show', compact('book'));
-
+        return view('books.show', compact('book'));
     }
-public function rate(Request $request ,Book $book){
-$request->validate([
-    'rating'=>['required','integer','min:1','max:5']
-]);
-$book->ratings()->updateOrCreate(
-    ['user_id'=>auth()->id()],
-    ['rating'=>$request->rating]
-);
-    return back()->with('success', 'Thank you for rating!');
-
-}
-   
-
-  
+    public function rate(Request $request, Book $book)
+    {
+        $request->validate([
+            'rating' => ['required', 'integer', 'min:1', 'max:5']
+        ]);
+        $book->ratings()->updateOrCreate(
+            ['user_id' => auth()->id()],
+            ['rating' => $request->rating]
+        );
+        return back()->with('success', 'Thank you for rating!');
+    }
+    
 }

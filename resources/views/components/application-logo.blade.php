@@ -1,2 +1,1 @@
-    <img src="{{ asset('images/logo/logo.png') }}" alt="Logo" style="height: 80px; object-fit: contain;">
-
+ <h1 class="text-2xl font-bold text-sky-700">📚 BookTick</h1>

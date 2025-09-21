@@ -1,11 +1,12 @@
 <x-app-layout>
-    <div class="p-6">
-<h1 class="text-2xl font-bold text-gray-800 mb-6">👤 Manage Users</h1>
 
-<a href="{{ route('dashboard') }}"
-   class="inline-block mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-    🔙 Back to Dashboard
-</a>
+    <div class="py-8 max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">👤 Manage Users</h1>
+
+        <a href="{{ route('dashboard') }}"
+           class="inline-block mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            🔙 Back to Dashboard
+        </a>
 
         @if(session('success'))
             <div class="bg-green-100 text-green-800 p-4 rounded mb-4">

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use App\Models\Rating;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -12,7 +13,7 @@ use Laravel\Cashier\Billable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable,Billable;
+    use HasFactory, Notifiable, Billable;
 
     /**
      * The attributes that are mass assignable.
@@ -47,19 +48,22 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function ratings(){
-    return $this->hasMany(Rating::class);
-}
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
 
-public function hasRated($book)
-{
-    return $this->ratings()->where('book_id', $book->id)->exists();
-}
+    public function hasRated($book)
+    {
+        return $this->ratings()->where('book_id', $book->id)->exists();
+    }
 
-public function getRating($book)
-{
-    return $this->ratings()->where('book_id', $book->id)->value('rating');
-}
-
-
+    public function getRating($book)
+    {
+        return $this->ratings()->where('book_id', $book->id)->value('rating');
+    }
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class);
+    }
 }

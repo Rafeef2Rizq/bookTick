@@ -102,7 +102,6 @@ class CheckoutController extends Controller
         }
     }
 
-    // الدوال المساعدة للسلة
     protected function getCart()
     {
         return session()->get('cart', []);

@@ -1,80 +1,158 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Your Cart') }}
-        </h2>
-    </x-slot>
+<!DOCTYPE html>
+<html lang="en">
 
-    <div class="py-12 bg-gray-100">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-            @if(count($cart) > 0)
-                <div class="bg-white shadow-md rounded-lg p-6">
-                    <table class="min-w-full table-auto">
-                        <thead>
-                            <tr class="bg-gray-200 text-left">
-                                <th class="px-4 py-2">Book</th>
-                                <th class="px-4 py-2">Quantity</th>
-                                <th class="px-4 py-2">Price</th>
-                                <th class="px-4 py-2">Total</th>
-                                <th class="px-4 py-2">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php $grandTotal = 0; @endphp
-                            @foreach ($cart as $id => $item)
-                                @php
-                                    $total = $item['price'] * $item['quantity'];
-                                    $grandTotal += $total;
-                                @endphp
-                                <tr class="border-b">
-                                    <td class="px-4 py-2 flex items-center gap-4">
-                                        <img src="{{ asset('images/' . ($item['image'] ?? 'default-book.png')) }}" class="w-16 h-16 object-cover rounded">
-                                        <div>
-                                            <div class="font-bold">{{ $item['title'] }}</div>
-                                            <div class="text-sm text-gray-600">${{ $item['price'] }}</div>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-2">
-                                        <form action="{{ route('cart.update', $id) }}" method="POST" class="inline-flex">
-                                            @csrf
-                                            <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" class="w-16 border rounded px-2 py-1 text-center">
-                                            <button type="submit" class="ml-2 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-sm">
-                                                Update
-                                            </button>
-                                        </form>
-                                    </td>
-                                    <td class="px-4 py-2">${{ $item['price'] }}</td>
-                                    <td class="px-4 py-2 font-semibold">${{ $total }}</td>
-                                    <td class="px-4 py-2">
-                                        <a href="{{ route('cart.remove', $id) }}" class="text-red-500 hover:underline text-sm">
-                                            Remove
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            <tr class="bg-gray-100 font-bold">
-                                <td colspan="3" class="px-4 py-2 text-right">Total:</td>
-                                <td colspan="2" class="px-4 py-2">${{ $grandTotal }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
 
-                    {{-- زر اتمام الشراء --}}
-                    <div class="mt-6 text-right">
-                        <a href="{{ route('checkout.index') }}" 
-                           class="inline-block bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 transition">
-                            Proceed to Checkout
-                        </a>
-                    </div>
-                </div>
-            @else
-                <div class="bg-white p-6 rounded shadow text-center">
-                    <p class="text-gray-600 text-lg">Your cart is empty.</p>
-                    <a href="{{ route('books.index') }}" class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        Browse Books
-                    </a>
-                </div>
-            @endif
+<x-main.head />
+
+<body>
+    @php
+    use App\Models\Book;
+
+$books = Book::latest()->paginate(3);
+    @endphp
+    <!-- perloader -->
+    <div id="preloader">
+        <div id="loading-center">
+            <div id="loading-center-absolute">
+                <div class="object" id="object_one"></div>
+                <div class="object" id="object_two"></div>
+                <div class="object" id="object_three"></div>
+                <div class="object" id="object_four"></div>
+            </div>
         </div>
     </div>
-</x-app-layout>
+    <!-- preloader -->
+
+    <!-- HEADER AREA START -->
+    <x-main.header />
+
+    <!-- right-menu modal -->
+    <x-main.menu />
+    <!-- contact modal -->
+    <x-main.contact />
+
+    <!-- HEADER AREA ENDS -->
+
+
+    <!-- cart -->
+   
+    <section id="page-title">
+        <div id="backtotop">
+            <a href="#page-title" id="backtotop-value"><i class="fa-solid fa-arrow-up"></i></a>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="section-title">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <span>Add to Cart</span>
+                            <h3>Checkout The Cart Page.</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+  @php $grandTotal = 0; @endphp
+
+<section id="cart">
+    <div class="container">
+        @if(count($cart) > 0)
+            <div class="row cart-main">
+                @foreach ($cart as $id => $item)
+                    @php
+                        $total = $item['price'] * $item['quantity'];
+                        $grandTotal += $total;
+                    @endphp
+                    <div class="col-lg-12">
+                        <div class="cart-item">
+                            <div class="row">
+                                <div class="col-lg-1 col-md-12 tablet-hide">
+                                    <h4>{{ $loop->iteration }}</h4>
+                                </div>
+                                <div class="col-lg-2 col-md-2">
+                                    <img src="{{ asset('images/' . ($item['image'] ?? 'default-book.png')) }}" alt="{{ $item['title'] }}" class="img-fluid">
+                                </div>
+                                <div class="col-lg-2 col-md-3">
+                                    <span>Comic Name</span>
+                                    <h3>{{ $item['title'] }}</h3>
+                                </div>
+                                <div class="col-lg-2 col-md-2">
+                                    <span>Quantity</span>
+                                    <form action="{{ route('cart.update', $id) }}" method="POST" class="inline-flex">
+                                        @csrf
+                                        <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" class="form-control">
+                                        <button type="submit" class="button-primary" style="padding:10px 15px; margin-top:10px">
+                                            Update
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-lg-2 col-md-2">
+                                    <span>Price</span>
+                                    <h3>${{ $item['price'] }}</h3>
+                                </div>
+                                <div class="col-lg-2 col-md-3">
+                                    <span>Action</span>
+                                    <a href="{{ route('cart.remove', $id) }}">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                                <div class="col-lg-1 col-md-1 tablet-hide">
+                                    <span>Subtotal</span>
+                                    <h3>${{ $total }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="row pt-5">
+                <div class="col-4 col-lg-6 cart-footer">
+                    <a href="#">Apply Coupon Code</a>
+                </div>
+                <div class="col-8 col-lg-6 text-end">
+                    <a href="/checkout" class="button-primary">Pay ${{ $grandTotal }}</a>
+                </div>
+            </div>
+        @else
+            <p>Your cart is empty.</p>
+        @endif
+    </div>
+   
+</section>
+
+    <!-- cart -->
+
+    <!-- FOOTER AREA START -->
+    <x-main.footer />
+    <!-- FOOTER AREA END -->
+
+    <!-- COPY_RIGHT AREA START -->
+    <section id="copy_right">
+        <div class="container">
+            <div class="row copyright-txt">
+                <div class="col-lg-6">
+                    <span>LANGUAGE: </span>
+                    <a href="#">BAN</a>
+                    <a href="#">NL</a>
+                    <a href="#" class="active">EN</a>
+                    <a href="#">FR</a>
+                    <a href="#">EU</a>
+                </div>
+                <div class="col-lg-6 text-end">
+                    <p>&copy; Made by EpikTheme. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- COPY_RIGHT AREA END -->
+
+    <!-- JavaScript -->
+    <x-main.script />
+</body>
+
+
+<!-- Mirrored from epiktheme.com/demos/html/comixo_live_preview/demos/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 15 Jul 2024 03:52:57 GMT -->
+
+</html>

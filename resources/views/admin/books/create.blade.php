@@ -1,4 +1,5 @@
 <x-app-layout>
+
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Add New Book
@@ -42,11 +43,19 @@
         <label for="image" class="block text-gray-700 font-semibold mb-2">Book Image (optional)</label>
         <input type="file" name="image" id="image" accept="image/*" class="w-full ...">
     </div>
+<div>
+            <label for="pdf_file">Upload PDF</label>
+        <input type="file" name="pdf_file" id="pdf_file" accept=".pdf">
+    </div>
+    
+    <button type="submit">Save Book</button>
 
+</div>
     <div>
         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">Save Book</button>
     </div>
 </form>
 
     </div>
+
 </x-app-layout>

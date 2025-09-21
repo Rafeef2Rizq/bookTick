@@ -4,36 +4,38 @@ use App\Http\Controllers\AdminBookController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\EmailController;
+use App\Models\Book;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-
+Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+    ->middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('dashboard');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
-Route::resource('/books',BookController::class);
+require __DIR__ . '/auth.php';
+Route::resource('/books', BookController::class);
 // Cart endpoints
 
-Route::get('/cart',[CartController::class,'index'])->name('cart.index');
-Route::get('/cart/add/{id}',[CartController::class,'add'])->name('cart.add');
-Route::get('/cart/remove/{id}',[CartController::class,'remove'])->name('cart.remove');
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+Route::get('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->middleware('auth')->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'store'])->middleware('auth')->name('checkout.store');
 
 
-Route::get('/checkout/thankyou', function() {
+Route::get('/checkout/thankyou', function () {
     return view('checkout.thankyou');
 })->name('checkout.thankyou');
 Route::get('/', function () {
@@ -51,10 +53,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('/users', AdminUserController::class);
 });
 
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])
-    ->middleware(['auth', 'admin'])
-    ->prefix('admin')
-    ->name('dashboard');
+
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
@@ -62,3 +61,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
 });
 
 Route::post('/books/{book}/rate', [BookController::class, 'rate'])->name('books.rate');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/bookmarks', [BookmarkController::class, 'index'])->name('bookmarks.index');
+    Route::post('/bookmarks/{book}', [BookmarkController::class, 'store'])->name('bookmarks.store');
+    Route::delete('/bookmarks/{bookmark}', [BookmarkController::class, 'destroy'])->name('bookmarks.destroy');
+});
+Route::post('/sendEmail',action: [EmailController::class,'sendEmail'])->name('email.send');

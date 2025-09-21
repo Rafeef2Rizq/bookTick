@@ -1,108 +1,106 @@
-<x-app-layout>
-    <div x-data="{ showImage: false }" class="max-w-6xl mx-auto px-6 py-12">
-        <div class="grid md:grid-cols-2 gap-12 items-start">
-
-            <!-- Book Cover with Clickable Modal -->
-            <div class="relative">
-                <div @click="showImage = true" class="cursor-zoom-in rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-white">
-                    <img src="{{asset('images/' . $book->image) }}"
-                        alt="{{ $book->title }}"
-                        class="w-full h-[450px] object-cover object-center hover:scale-105 transition-transform duration-300" />
-                </div>
-
-                <!-- Modal Fullscreen Image -->
-                <div x-show="showImage" x-cloak
-                    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80">
-                    <div class="relative">
-                        <img src="{{ asset('images/' . $book->image) }}" alt="{{ $book->title }}"
-                            class="max-w-full max-h-screen rounded-lg shadow-lg border border-white" />
-                        <button @click="showImage = false"
-                            class="absolute top-2 right-2 bg-white text-gray-800 rounded-full p-1 hover:bg-gray-100">
-                            ✖
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Book Details -->
-            <div class="space-y-6">
-                <h1 class="text-4xl font-bold text-gray-900">{{ $book->title }}</h1>
-
-                <p class="text-gray-700 text-lg">
-                    <span class="font-semibold text-gray-800">Author:</span> {{ $book->author }}
-                </p>
-
-                <div class="text-gray-800 leading-relaxed text-justify border-t pt-4 max-h-[300px] overflow-auto">
-                    {!! nl2br(e($book->description)) !!}
-                </div>
-
-                <!-- Add to Cart Button -->
-                <a href="{{ route('cart.add', $book->id) }}" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition-all duration-200">
-                    🛒 Add to Cart
-                </a>
+<!DOCTYPE html>
+<html lang="en">
 
 
-                <br>
-                <!-- Back Link -->
-                <a href="{{ route('books.index') }}"
-                    class="inline-block text-blue-600 hover:underline text-sm mt-4">
-                    ← Back to Book List
-                </a>
-                <!-- Rating -->
-                @if(auth()->check())
-                <form id="ratingForm" class="my-4">
-                    @csrf
-                    <label for="rating" class="block font-semibold text-gray-700 mb-2">Rate this Book:</label>
-                    <select name="rating" id="rating" class="border rounded px-3 py-2">
-                        @for ($i = 1; $i <= 5; $i++)
-                            <option value="{{ $i }}" {{ auth()->user()->hasRated($book) && auth()->user()->getRating($book) == $i ? 'selected' : '' }}>
-                            {{ $i }} ⭐
-                            </option>
-                            @endfor
-                    </select>
-                    <input type="hidden" name="book_id" value="{{ $book->id }}">
-                </form>
-                @endif
+<x-main.head />
+
+<body>
+	@php
+	use App\Models\Book;
+
+	$books=Book::paginate(3);
+	@endphp
+	<!-- perloader -->
+	<div id="preloader">
+		<div id="loading-center">
+			<div id="loading-center-absolute">
+				<div class="object" id="object_one"></div>
+				<div class="object" id="object_two"></div>
+				<div class="object" id="object_three"></div>
+				<div class="object" id="object_four"></div>
+			</div>
+		</div>
+	</div>
+	<!-- preloader -->
+
+	<!-- HEADER AREA START -->
+	<x-main.header />
+
+	<!-- right-menu modal -->
+	<x-main.menu />
+	<!-- contact modal -->
+	<x-main.contact />
+
+	<!-- HEADER AREA ENDS -->
 
 
-                <!-- إشعار بسيط -->
-                <div id="ratingMessage" class="text-green-600 text-sm mt-2 hidden">Rating updated successfully!</div>
+	<!-- comic details -->
+	<section id="page-title">
+		<div id="backtotop">
+			<a href="#page-title" id="backtotop-value"><i class="fa-solid fa-arrow-up"></i></a>
+		</div>
+	</section>
+	<section id="comic-details">
+		<div class="container zindex">
+			<div class="row details-pos">
+				<div class="col-lg-5 comic-detail-img">
+					<img src="{{ asset('images/' . $book->image) }}"" alt=" comic-img" class="img-fluid">
+				</div>
+				<div class="col-lg-6 comic-detail-txt">
+					<div class="stars">
+						<i class="fa-solid fa-star"></i>
+						<i class="fa-solid fa-star"></i>
+						<i class="fa-solid fa-star"></i>
+						<i class="fa-solid fa-star"></i>
+						<i class="fa-solid fa-star-half-stroke"></i>
+						<span>4.5</span>
+					</div>
+					<h3>{{ $book->title }}</h3>
+					<span>{{ $book->author }}</span>
+					<p>{{ $book->description }}</p>
+					<h4>${{ $book->price }}</h4>
+					<a href="/cart/add/{{ $book->id }}" class="button-primary">Add To Cart</a>
+					<form action="{{ route('bookmarks.store', $book->id) }}" method="POST">
+						@csrf
+						<button type="submit" class="bookmark-btn" style="border: none; margin-top:50px" ><i class="fa-solid fa-bookmark"></i></button>
+					</form>
+				
+				</div>
+			</div>
+		</div>
 
-                <!-- JavaScript: إرسال التقييم بدون زر -->
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const ratingSelect = document.getElementById('rating');
-                        const form = document.getElementById('ratingForm');
-                        const message = document.getElementById('ratingMessage');
+	</section>
+	<!-- comic details -->
 
-                        ratingSelect.addEventListener('change', function() {
-                            const formData = new FormData(form);
+	<!-- FOOTER AREA START -->
+	<x-main.footer />
+	<!-- FOOTER AREA END -->
 
-                            fetch("{{ route('books.rate', $book) }}", {
-                                    method: "POST",
-                                    headers: {
-                                        'X-CSRF-TOKEN': formData.get('_token'),
-                                    },
-                                    body: formData,
-                                })
-                                .then(response => {
-                                    if (response.ok) {
-                                        message.classList.remove('hidden');
-                                        setTimeout(() => message.classList.add('hidden'), 3000);
-                                    } else {
-                                        alert('Something went wrong');
-                                    }
-                                });
-                        });
-                    });
-                </script>
+	<!-- COPY_RIGHT AREA START -->
+	<section id="copy_right">
+		<div class="container">
+			<div class="row copyright-txt">
+				<div class="col-lg-6">
+					<span>LANGUAGE: </span>
+					<a href="#">BAN</a>
+					<a href="#">NL</a>
+					<a href="#" class="active">EN</a>
+					<a href="#">FR</a>
+					<a href="#">EU</a>
+				</div>
+				<div class="col-lg-6 text-end">
+					<p>&copy; Made by EpikTheme. All Rights Reserved.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- COPY_RIGHT AREA END -->
 
-            </div>
+	<!-- JavaScript -->
+	<x-main.script />
+</body>
 
 
-        </div>
-    </div>
+<!-- Mirrored from epiktheme.com/demos/html/comixo_live_preview/demos/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 15 Jul 2024 03:52:57 GMT -->
 
-    <!-- AlpineJS CDN -->
-    <script src="//unpkg.com/alpinejs" defer></script>
-</x-app-layout>
+</html>

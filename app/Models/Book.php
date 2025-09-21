@@ -9,7 +9,7 @@ class Book extends Model
 {
     /** @use HasFactory<\Database\Factories\BookFactory> */
     use HasFactory;
-    protected $fillable = ['title', 'price', 'description', 'image', 'author'];
+    protected $fillable = ['title', 'price', 'description', 'image', 'author','pdf_file'];
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
@@ -23,4 +23,8 @@ class Book extends Model
     {
         return $this->ratings()->avg('rating');
     }
+    public function bookmarks(){
+    return $this->hasMany(Bookmark::class);
+}
+
 }

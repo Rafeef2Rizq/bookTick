@@ -84,8 +84,8 @@ class AdminBookController extends Controller
     }
     public function destroy(Book $book)
     {
-        if ($book->pdf_file) {
-            $oldImagePath = public_path('images/' . $book->pdf_file);
+        if ($book->image) {
+            $oldImagePath = public_path('images/' . $book->image);
             if (file_exists($oldImagePath)) {
                 @unlink($oldImagePath);
             }

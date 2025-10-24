@@ -109,7 +109,7 @@ $books = Book::latest()->paginate(3);
 
             <div class="row pt-5">
                 <div class="col-4 col-lg-6 cart-footer">
-                    <a href="#">Apply Coupon Code</a>
+                 Total amount: ${{ $grandTotal }}
                 </div>
                 <div class="col-8 col-lg-6 text-end">
                     <a href="/checkout" class="button-primary">Pay ${{ $grandTotal }}</a>

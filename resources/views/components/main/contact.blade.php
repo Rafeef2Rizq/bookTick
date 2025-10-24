@@ -25,7 +25,7 @@
 										<input type="text" name="subject" class="form-control" placeholder="Subject">
 									</div>
 									<div class="col-lg-12">
-										<textarea class="form-control" name="comment" placeholder="Write Your Comment Here..." rows="3"></textarea>
+										<textarea class="form-control" name="messageBody" placeholder="Write Your Comment Here..." rows="3"></textarea>
 									</div>
 								</div>
 							</div>

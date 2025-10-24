@@ -23,7 +23,8 @@
 				<div class="menu-action d-flex">
 					<div class="action-icon">
 						<a href="/bookmarks" class="menu-icon"><i class="fa-solid fa-bookmark"></i></a>
-						<a href="/cart" class="menu-icon"><span>2</span><i class="fa-solid fa-cart-shopping"></i></a>
+						<a href="/cart" class="menu-icon"><span>{{ app('App\Http\Controllers\CartController')->getCartQuantity() }}</span><i class="fa-solid fa-cart-shopping"></i></a>
+						
 						<a data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" class="menu-icon mobile-v-show"><i class="fa-solid fa-magnifying-glass"></i></a>
 					</div>
 					<a href="#" class="button-secondary">Free Books</a>

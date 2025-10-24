@@ -15,19 +15,19 @@ class BookmarkController extends Controller
             return back();
         }
         $user->bookmarks()->create(['book_id' => $book->id]);
-return redirect()->route('bookmarks.index')->with('success', 'Book bookmarked!');
+        return redirect()->route('bookmarks.index')->with('success', 'Book bookmarked!');
     }
-  public function destroy(Request $request, Bookmark $bookmark)
-{
-    $user = $request->user();
+    public function destroy(Request $request, Bookmark $bookmark)
+    {
+        $user = $request->user();
 
-    if ($bookmark->user_id === $user->id) {
-        $bookmark->delete();
-        return back()->with('success', 'Bookmark removed!');
+        if ($bookmark->user_id === $user->id) {
+            $bookmark->delete();
+            return back()->with('success', 'Bookmark removed!');
+        }
+
+        return back()->with('error', 'Bookmark not found!');
     }
-
-    return back()->with('error', 'Bookmark not found!');
-}
 
 
 

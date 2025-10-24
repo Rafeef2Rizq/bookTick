@@ -10,7 +10,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EmailController;
-use App\Models\Book;
+
 
 Route::get('/dashboard', [AdminDashboardController::class, 'index'])
     ->middleware(['auth', 'admin'])
@@ -67,4 +67,4 @@ Route::middleware('auth')->group(function () {
     Route::post('/bookmarks/{book}', [BookmarkController::class, 'store'])->name('bookmarks.store');
     Route::delete('/bookmarks/{bookmark}', [BookmarkController::class, 'destroy'])->name('bookmarks.destroy');
 });
-Route::post('/sendEmail',action: [EmailController::class,'sendEmail'])->name('email.send');
+Route::post('/send-email', [EmailController::class,'sendEmail'])->name('email.send');

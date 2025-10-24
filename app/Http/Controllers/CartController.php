@@ -52,4 +52,15 @@ class CartController extends Controller
         }
         return redirect()->back()->with('success', 'Book updated to cart');
     }
+       public function getCartQuantity()
+    {
+        $cart = session()->get('cart', []);
+        $totalQuantity = 0;
+
+        foreach ($cart as $item) {
+            $totalQuantity += $item['quantity'];
+        }
+
+        return $totalQuantity;
+    }
 }

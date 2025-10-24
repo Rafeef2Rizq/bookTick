@@ -18,11 +18,8 @@
     <x-main.menu />
     <x-main.contact />
 
-
-
     <!-- ABOUT AREA -->
     <section id="about">
-        <!-- محتوى about -->
     </section>
 
     <!-- CART / CHECKOUT AREA START -->
@@ -58,7 +55,6 @@
         <p>Your cart is empty.</p>
         @endif
 
-
         <form action="{{ route('checkout.store') }}" method="POST" id="payment-form" class="border p-4 rounded">
             @csrf
             {{-- بيانات العميل --}}
@@ -75,16 +71,14 @@
                 <input type="text" name="phone" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label>Card Holder Name</label>
-                <input type="text" id="card-holder-name" class="form-control" required>
-            </div>
-            <div class="mb-3">
                 <label for="card-element">Credit or Debit Card</label>
                 <div id="card-element" class="w-full border border-gray-300 rounded px-3 py-3"></div>
                 <div id="card-errors" class="text-red-600 text-sm mt-2"></div>
             </div>
+
             {{-- بيانات مخفية --}}
             <input type="hidden" name="payment_method" id="payment-method">
+
             <div class="mb-3">
                 <button type="submit" id="card-button" class="btn btn-success w-100" data-secret="{{ $intent->client_secret }}"> Pay & Place Order </button>
             </div>
@@ -96,47 +90,78 @@
     <x-main.footer />
     <x-main.script />
 
-    @push('scripts')
-    <script src="https://js.stripe.com/v3/"></script>
+
+    <script src="https://js.stripe.com/clover/stripe.js"></script>
+   
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const stripe = Stripe("{{ config('services.stripe.key') }}");
-            const elements = stripe.elements();
-            const cardElement = elements.create('card');
-            cardElement.mount('#card-element');
-            const cardHolderName = document.getElementById('card-holder-name');
-            const cardButton = document.getElementById('card-button');
-            const clientSecret = cardButton.dataset.secret;
-            const form = document.getElementById('payment-form');
-            const errorDisplay = document.getElementById('card-errors');
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                cardButton.disabled = true;
-                cardButton.textContent = "Processing...";
-                const {
-                    error,
-                    paymentIntent
-                } = await stripe.confirmCardPayment(clientSecret, {
+    document.addEventListener('DOMContentLoaded', function() {
+        const stripe = Stripe("{{ config('services.stripe.key') }}");
+        const elements = stripe.elements();
+
+        const cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+
+        const cardButton = document.getElementById('card-button');
+        const clientSecret = cardButton.dataset.secret;
+        const form = document.getElementById('payment-form');
+        const errorDisplay = document.getElementById('card-errors');
+        const paymentMethodInput = document.getElementById('payment-method');
+
+        // تأكد أن الزر غير معطّل افتراضياً (إذا كان معطلاً قم بإزالة هذا السطر)
+        cardButton.disabled = false;
+
+        // اعرض أخطاء العنصر تلقائيًا عند تغيير الحالة
+        cardElement.on('change', function(event) {
+            if (event.error) {
+                errorDisplay.textContent = event.error.message;
+            } else {
+                errorDisplay.textContent = '';
+            }
+        });
+
+        // الحدث عند ارسال الفورم
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // تعطيل الزر أثناء المعالجة لمنع الضغط المزدوج
+            cardButton.disabled = true;
+            const originalText = cardButton.textContent;
+            cardButton.textContent = "Processing...";
+
+            try {
+                const result = await stripe.confirmCardPayment(clientSecret, {
                     payment_method: {
-                        card: cardElement,
-                        billing_details: {
-                            name: cardHolderName.value,
-                        }
+                        card: cardElement
                     }
                 });
-                if (error) {
-                    errorDisplay.textContent = error.message;
+
+                if (result.error) {
+                    errorDisplay.textContent = result.error.message || 'Payment failed.';
                     cardButton.disabled = false;
-                    cardButton.textContent = "Pay & Place Order";
-                } else if (paymentIntent.status === 'succeeded') {
-                    window.location.href = "{{ route('checkout.thankyou') }}";
+                    cardButton.textContent = originalText;
                 } else {
-                    errorDisplay.textContent = "Unexpected status: " + paymentIntent.status;
-                    cardButton.disabled = false;
-                    cardButton.textContent = "Pay & Place Order";
+                    const paymentIntent = result.paymentIntent;
+
+                    if (paymentIntent && paymentIntent.status === 'succeeded') {
+                        if (paymentIntent.payment_method) {
+                            paymentMethodInput.value = paymentIntent.payment_method;
+                        }
+
+                        window.location.href = "{{ route('checkout.thankyou') }}";
+                    } else {
+                        errorDisplay.textContent = "Unexpected status: " + (paymentIntent ? paymentIntent.status : 'no paymentIntent');
+                        cardButton.disabled = false;
+                        cardButton.textContent = originalText;
+                    }
                 }
-            });
+            } catch (err) {
+                console.error(err);
+                errorDisplay.textContent = 'Unexpected error. Check console.';
+                cardButton.disabled = false;
+                cardButton.textContent = originalText;
+            }
         });
+    });
     </script>
-     @endpush
+
 </body>

@@ -2,13 +2,13 @@
 <html lang="en">
 
 
-<x-main.head/>
+<x-main.head />
 
 <body>
 	@php
 	use App\Models\Book;
 
-$books = Book::latest()->paginate(3);
+	$books = Book::latest()->paginate(3);
 	@endphp
 	<!-- perloader -->
 	<div id="preloader">
@@ -24,12 +24,12 @@ $books = Book::latest()->paginate(3);
 	<!-- preloader -->
 
 	<!-- HEADER AREA START -->
-		<x-main.header/>
+	<x-main.header />
 
 	<!-- right-menu modal -->
-	<x-main.menu/>
+	<x-main.menu />
 	<!-- contact modal -->
-		<x-main.contact/>
+	<x-main.contact />
 
 	<!-- HEADER AREA ENDS -->
 
@@ -46,23 +46,7 @@ $books = Book::latest()->paginate(3);
 					<h3 class="txt-pos">Tick.</h3>
 					<a href="#" class="button-primary">Read Now</a>
 					<a class="venobox button-circular" data-autoplay="true" data-vbtype="video" href="https://www.youtube.com/watch?v=kmh1cr3b4Js"><i class="fa-solid fa-play"></i></a>
-					<div class="row banner-review">
-						<div class="col-lg-3">
-							<img src="{{ asset('assets/main/images/user5.png') }}" alt="user" class="one">
-							<img src="{{ asset('assets/main/images/user1.png') }}" alt="user">
-							<img src="{{ asset('assets/main/images/user2.png') }}" alt="user">
-						</div>
-						<div class="col-lg-4">
-							<div class="stars">
-								<i class="fa-solid fa-star"></i>
-								<i class="fa-solid fa-star"></i>
-								<i class="fa-solid fa-star"></i>
-								<i class="fa-solid fa-star"></i>
-								<i class="fa-solid fa-star-half-stroke"></i>
-							</div>
-							<p>(409.6K Reviews)</p>
-						</div>
-					</div>
+
 				</div>
 				<div class="col-10 col-sm-11 col-md-7 col-lg-6 banner-images">
 					<img src="{{ asset('assets/main/images/banner-icon.png') }}" alt="banner-icon" class="banner-icon">
@@ -71,7 +55,7 @@ $books = Book::latest()->paginate(3);
 				</div>
 			</div>
 		</div>
-	
+
 	</section>
 	<!-- BANNER AREA ENDS -->
 
@@ -94,15 +78,16 @@ $books = Book::latest()->paginate(3);
 				<div class="col-lg-6">
 					<div class="about-txt">
 						<span>About Us</span>
-						<h3>Digital Books Arts Company.</h3>
-						<p class="pt-2 pb-4">We are a company specialized in providing digital books and contemporary art, offering an innovative experience for users through comic books and animation art.
-</p>
+						<h3>Digital Bookstore & Reading Platform</h3>
+						<p class="pt-2 pb-4"> We are a digital platform specialized in providing a wide range of eBooks across different genres.
+							Our mission is to make reading more accessible and enjoyable through instant digital downloads
+							and a seamless user experience.
+						</p>
 						<div class="check-p">
-							<p><i class="fa-solid fa-check"></i> We Offer Unique Comic Books & Arts</p>
-							<p><i class="fa-solid fa-check"></i> Get Collection Of Creative Series</p>
-							<p><i class="fa-solid fa-check"></i> Watch Cartoon And Kid Animation</p>
+							<p><i class="fa-solid fa-check"></i> Access a wide collection of digital books</p>
+							<p><i class="fa-solid fa-check"></i> Enjoy secure and instant downloads</p>
+							<p><i class="fa-solid fa-check"></i>Discover new authors and creative stories</p>
 						</div>
-						<a class="button-circular" data-autoplay="true" data-vbtype="video" href="https://www.youtube.com/watch?v=4S8RC5zzG5g"><i class="fa-solid fa-play"></i> Watch Story</a>
 					</div>
 				</div>
 			</div>
@@ -110,29 +95,7 @@ $books = Book::latest()->paginate(3);
 	</section>
 	<!-- ABOUT AREA ENDS -->
 
-	<!-- BRAND AREA START -->
-	<section id="brand">
-		<div class="container">
-			<div class="brand-main">
-				<div class="col-lg-3">
-					<img src="{{ asset('assets/main/images/brand1.png') }}" alt="brand-img" class="img-fluid">
-				</div>
-				<div class="col-lg-3">
-					<img src="{{ asset('assets/main/images/brand2.png') }}" alt="brand-img" class="img-fluid">
-				</div>
-				<div class="col-lg-3">
-					<img src="{{ asset('assets/main/images/brand3.png') }}" alt="brand-img" class="img-fluid">
-				</div>
-				<div class="col-lg-3">
-					<img src="{{ asset('assets/main/images/brand1.png') }}" alt="brand-img" class="img-fluid">
-				</div>
-				<div class="col-lg-3">
-					<img src="{{ asset('assets/main/images/brand2.png') }}" alt="brand-img" class="img-fluid">
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- BRAND AREA END -->
+
 
 	<!-- NEW_COMICS AREA START -->
 	<section id="new-comics">
@@ -149,9 +112,9 @@ $books = Book::latest()->paginate(3);
 			</div>
 			<div class="row comic-item-pos">
 				@foreach ($books as $book )
-					<div class="col-lg-4 col-md-8 mobile-m-auto">
+				<div class="col-lg-4 col-md-8 mobile-m-auto">
 					<div class="comic-item">
-						<img src="{{ asset('images/' . $book->image) }}" alt="comic" class="img-fluid" style="height: 480px;" >
+						<img src="{{ asset('images/' . $book->image) }}" alt="comic" class="img-fluid" style="height: 480px;">
 						<a class="veno-img" data-gall="comic1" href="{{ asset('images/' . $book->image) }}"><i class="fa-solid fa-plus"></i></a>
 						<div class="comic-item-details">
 							<div class="row">
@@ -167,51 +130,52 @@ $books = Book::latest()->paginate(3);
 					</div>
 				</div>
 				@endforeach
-				
-				
+
+
 			</div>
 		</div>
 	</section>
 	<!-- NEW_COMICS AREA END -->
 
-<section id="popular">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 section-title">
-                <span>Popular</span>
-                <h3>Explore Our Creativity.</h3>
-                <p>Discover the most loved books by our readers.</p>
-                <a href="/books" class="button-primary">Browse All</a>
-            </div>
+	<section id="popular">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 section-title">
+					<span>Popular</span>
+					<h3>Explore Our Creativity.</h3>
+					<p>Discover the most loved books by our readers.</p>
+					<a href="/books" class="button-primary">Browse All</a>
+				</div>
 
-            @foreach($books as $book)
-            <div class="col-lg-6 col-md-9 mobile-m-auto mb-5">
-                <div class="popular-item {{ $loop->iteration % 2 == 0 ? 'right' : '' }}">
-                    <p>{{ $book->published_year }}</p>
-                    <div class="col-lg-10 {{ $loop->iteration % 2 == 0 ? 'me-auto' : 'ms-auto' }}">
-                        <img src="{{ asset('images/' . ($book->image ?? 'default-book.png')) }}" alt="{{ $book->title }}" class="img-fluid">
-                        <a href="{{ route('books.show', $book->id) }}">{{ $book->title }}</a>
-                    </div>
-                </div>
-            </div>
-            @endforeach
+				@foreach($books as $book)
+				<div class="col-lg-6 col-md-9 mobile-m-auto mb-5">
+					<div class="popular-item {{ $loop->iteration % 2 == 0 ? 'right' : '' }}">
+						<p>{{ $book->published_year }}</p>
+						<div class="col-lg-10 {{ $loop->iteration % 2 == 0 ? 'me-auto' : 'ms-auto' }}">
+							<img src="{{ asset('images/' . ($book->image ?? 'default-book.png')) }}" alt="{{ $book->title }}" class="img-fluid">
+							<a href="{{ route('books.show', $book->id) }}">{{ $book->title }}</a>
+						</div>
+					</div>
+				</div>
+				@endforeach
 
-        </div>
-    </div>
-</section>
+			</div>
+		</div>
+	</section>
 
-	
+
 
 	<!-- FOOTER AREA START -->
-<x-main.footer />
+	<x-main.footer />
 	<!-- FOOTER AREA END -->
 
-	
+
 
 	<!-- JavaScript -->
-	<x-main.script/>
+	<x-main.script />
 </body>
 
 
 <!-- Mirrored from epiktheme.com/demos/html/comixo_live_preview/demos/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 15 Jul 2024 03:52:57 GMT -->
+
 </html>

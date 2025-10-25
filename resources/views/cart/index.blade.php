@@ -128,25 +128,7 @@ $books = Book::latest()->paginate(3);
     <x-main.footer />
     <!-- FOOTER AREA END -->
 
-    <!-- COPY_RIGHT AREA START -->
-    <section id="copy_right">
-        <div class="container">
-            <div class="row copyright-txt">
-                <div class="col-lg-6">
-                    <span>LANGUAGE: </span>
-                    <a href="#">BAN</a>
-                    <a href="#">NL</a>
-                    <a href="#" class="active">EN</a>
-                    <a href="#">FR</a>
-                    <a href="#">EU</a>
-                </div>
-                <div class="col-lg-6 text-end">
-                    <p>&copy; Made by EpikTheme. All Rights Reserved.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- COPY_RIGHT AREA END -->
+
 
     <!-- JavaScript -->
     <x-main.script />
